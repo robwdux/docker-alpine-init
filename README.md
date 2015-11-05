@@ -19,14 +19,14 @@ FROM robwdux/alpine-init
 ### shell in interactively
 ```shell
 sudo docker run --rm -it \
-                   --name base \
+                   --name init \
                    registry:5000/alpine/init \
                    bash
 ```
 ### shell into a daemonized running container
 ```shell
 sudo docker run -d \
-                --name base \
+                --name init \
                 registry:5000/alpine/init \
                 ping 8.8.8.8 && \
 sudo docker exec -it bash
