@@ -20,16 +20,38 @@ FROM robwdux/alpine-init
 ```shell
 sudo docker run --rm -it \
                    --name init \
-                   registry:5000/alpine/init \
+                   robwdux/docker-alpine-init \
                    bash
 ```
 ### shell into a daemonized running container
 ```shell
 sudo docker run -d \
                 --name init \
-                registry:5000/alpine/init \
+                robwdux/docker-alpine-init \
                 ping 8.8.8.8 && \
-sudo docker exec -it bash
+sudo docker exec -it init bash
+
+# in container
+bash-4.3# ps
+PID   USER     TIME   COMMAND
+    1 root       0:00 s6-svscan -t0 /var/run/s6/services
+   21 root       0:00 foreground  if   /etc/s6/init/init-stage2-redirfd   foreground    if     if      s6-echo      -n      --      [s6-init] making 
+   22 root       0:00 s6-supervise s6-fdholderd
+   26 root       0:00 foreground  s6-setsid  -gq  --  with-contenv  ping  8.8.8.8  import -u ? if  s6-echo  --  ping exited ${?}  foreground  redirfd
+   99 root       0:00 /bin/busybox ping 8.8.8.8
+  100 root       0:00 bash
+  106 root       0:00 ps
+
+bash-4.3# ps -o user,group,comm,pid,ppid
+USER     GROUP    COMMAND          PID   PPID
+root     root     s6-svscan            1     0
+root     root     foreground          21     1
+root     root     s6-supervise        22     1
+root     root     foreground          26    21
+root     root     busybox             99    26
+root     root     bash               100     0
+root     root     ps                 105   100
+
 ```
 
 ## Working with Alpine Linux
