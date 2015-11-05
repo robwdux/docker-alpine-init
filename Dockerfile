@@ -13,7 +13,7 @@ RUN set -o nounset -o errexit -o xtrace -o verbose && \
     echo "#!/usr/bin/with-contenv sh" \
       > ${SRV_TMPLT_DIR}/run.container.env && \
     echo -e "#!/bin/sh\ns6-svscanctl -t /var/run/s6/services" \
-      > ${SRV_TMPLT_DIR}/finish.container.stop && \
+      > ${SRV_TMPLT_DIR}/finish.stop.container && \
     chmod -R +x ${SRV_TMPLT_DIR}/*
 
 ENTRYPOINT ["/init"]
