@@ -35,7 +35,7 @@ sudo docker exec -it init bash
 bash-4.3# ps
 PID   USER     TIME   COMMAND
     1 root       0:00 s6-svscan -t0 /var/run/s6/services
-   21 root       0:00 foreground  if   /etc/s6/init/init-stage2-redirfd   foreground    if     if      s6-echo      -n      --      [s6-init] making 
+   21 root       0:00 foreground  if   /etc/s6/init/init-stage2-redirfd   foreground    if     if      s6-echo      -n      --      [s6-init] making
    22 root       0:00 s6-supervise s6-fdholderd
    26 root       0:00 foreground  s6-setsid  -gq  --  with-contenv  ping  8.8.8.8  import -u ? if  s6-echo  --  ping exited ${?}  foreground  redirfd
    99 root       0:00 /bin/busybox ping 8.8.8.8
@@ -54,15 +54,7 @@ root     root     ps                 105   100
 
 ```
 
-## Working with Alpine Linux
-
-+ [Alpine Linux Docker Image](http://gliderlabs.viewdocs.io/docker-alpine/)
-
-+ [Caveats](http://gliderlabs.viewdocs.io/docker-alpine/caveats/)
-
-+ [Packages](https://pkgs.alpinelinux.org/packages)
-
-+ [Package Management](http://wiki.alpinelinux.org/wiki/Alpine_Linux_package_management)
+## [Working with Alpine Linux](https://github.com/robwdux/docker-alpine-base#working-with-alpine-linux)
 
 ## Working with s6 init system
 
