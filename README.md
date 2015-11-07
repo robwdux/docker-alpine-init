@@ -1,5 +1,7 @@
 # docker-alpine-init
 
+[![](https://badge.imagelayers.io/robwdux/docker-alpine-init:latest.svg)](https://imagelayers.io/?images=robwdux/docker-alpine-init:latest 'Get your own badge on imagelayers.io')
+
 ## [Alpine Linux](http://alpinelinux.org/) base image plus s6 init system
 
 Built FROM [robwdux/alpine-base](https://github.com/robwdux/docker-alpine-base)
