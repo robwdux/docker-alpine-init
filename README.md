@@ -55,10 +55,11 @@ root     root     bash               100     0
 root     root     ps                 105   100
 
 ```
+## Customization
 
-## [Working with Alpine Linux](https://github.com/robwdux/docker-alpine-base#working-with-alpine-linux)
+### [Working with Alpine Linux](https://github.com/robwdux/docker-alpine-base#working-with-alpine-linux) overview
 
-## Working with s6 init system
+### Working with s6 init system
 
 + [Getting Started](http://blog.tutum.co/2015/05/20/s6-made-easy-with-the-s6-overlay/)
 
