@@ -2,9 +2,21 @@
 
 [![](https://badge.imagelayers.io/robwdux/docker-alpine-init:latest.svg)](https://imagelayers.io/?images=robwdux/docker-alpine-init:latest 'Get your own badge on imagelayers.io')
 
+*Provides s6 init system via [s6-overlay](https://github.com/just-containers/s6-overlay) including what has been provided from [robwdux/alpine-base](https://github.com/robwdux/docker-alpine-base)*
+
 ## [Alpine Linux](http://alpinelinux.org/) base image plus s6 init system
 
-Built FROM [robwdux/alpine-base](https://github.com/robwdux/docker-alpine-base)
+**3 Stage Init system**
+
+Stage 1: s6-init setup
+
+Stage 2:
++ container initialization - execute code prior to starting services, e.g. apply runtime configuration
++ process supervision - start and supervise defined services under the service directory
+
+Stage 3: container shutdown - execute code prior to service(s) being stopped
+
+**Reaps defunct (zombie) processes, mitigating full process table**
 
 ### ...start your Dockerfile
 
@@ -12,11 +24,38 @@ Built FROM [robwdux/alpine-base](https://github.com/robwdux/docker-alpine-base)
 FROM robwdux/alpine-init
 ```
 
-+ Provides s6 init system via [s6-overlay](https://github.com/just-containers/s6-overlay), cURL and Bash
+**_Processes should not daemonize, but run in foreground under supervision of the init system_**
 
-+ [Leverages fast CDN backed package mirrors provided by fastly courtesy of Gliderlabs](http://gliderlabs.com/blog/2015/09/23/fastly-cdn-speeds-up-alpine-package-installs/)
+**_Processes should log to standard error and standard out_**
 
-## Test Drive
+Leverage the docker log driver to stream logs off the host without incurring the i/o hit on disk.
+
+## Test Drive, Iterate for a new image
+
+*Interactively test commands and such then record in a Dockerfile for a new project*
+
+### Build or run with docker-compose
+```shell
+# add short alias for docker-compose
+echo "alias dc='docker-compose '" >> ~/.bashrc && source ~/.bashrc
+
+# the repo
+git clone https://github.com/robwdux/docker-alpine-init.git
+
+cd docker-alpine-init/
+
+# build and run (image doesn't exist locally)
+dc run --rm -ti init bash
+
+# build explicitly
+dc build
+
+# build with meta data via build args for git info
+sudo ./build.sh
+
+# view meta data
+$ docker inspect --format '{{ json .Config.Labels }}' robwdux/alpine-init:1.18.3.1 | jq
+```
 
 ### shell in interactively
 ```shell

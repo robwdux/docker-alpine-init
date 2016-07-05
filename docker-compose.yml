@@ -1,0 +1,28 @@
+# Purpose: Manage project, build image(s) / run container instances etc
+#
+# Author: "rob dux" <robwdux@gmail.com>
+#
+# https://docs.docker.com/compose/
+# https://docs.docker.com/compose/compose-file/
+
+version: '2'
+services:
+  init:
+    build:
+      context: .
+      args:
+        GIT_COMMIT: ${GIT_COMMIT}
+        GIT_COMMIT_DATE: ${GIT_COMMIT_DATE}
+        GIT_COMMIT_AUTHOR: ${GIT_COMMIT_AUTHOR}
+        GIT_REPO_URL: ${GIT_REPO_URL}
+    # tag to match source version of s6-overlay
+    image: robwdux/alpine-init:1.18.1.3
+    container_name: init
+#    environment:
+#      MY_VAR: value
+#    volumes:
+#      - ./:/app:ro
+#    expose:
+#      - "9000"
+#    ports:
+#      - "9000:9000"
