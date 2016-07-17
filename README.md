@@ -1,20 +1,27 @@
 # docker-alpine-init
-
+See below for help with the s6 init system
+<!---
 [![](https://badge.imagelayers.io/robwdux/docker-alpine-init:latest.svg)](https://imagelayers.io/?images=robwdux/docker-alpine-init:latest 'Get your own badge on imagelayers.io')
+-->
 
-*Provides s6 init system via [s6-overlay](https://github.com/just-containers/s6-overlay) including what has been provided from [robwdux/alpine-base](https://github.com/robwdux/docker-alpine-base)*
+*Provides s6 init system via [s6-overlay](https://github.com/just-containers/s6-overlay) in addition to [robwdux/alpine-base](https://github.com/robwdux/docker-alpine-base)*
+
+Addons available selectively during build.
++ [consul-template](https://github.com/hashicorp/consul-template/blob/master/README.md) for dynamic configuration (requires [consul](https://www.consul.io/intro/index.html))
 
 ## [Alpine Linux](http://alpinelinux.org/) base image plus s6 init system
 
 **3 Stage Init system**
 
-Stage 1: s6-init setup
+Stage 1:
++ s6-init setup
 
 Stage 2:
 + container initialization - execute code prior to starting services, e.g. apply runtime configuration
 + process supervision - start and supervise defined services under the service directory
 
-Stage 3: container shutdown - execute code prior to service(s) being stopped
+Stage 3:
++ container shutdown - execute code prior to service(s) being stopped
 
 **Reaps defunct (zombie) processes, mitigating full process table**
 
@@ -62,7 +69,7 @@ $ docker inspect --format '{{ json .Config.Labels }}' robwdux/alpine-init:1.18.3
 sudo docker run --rm -it \
                    --name init \
                    robwdux/docker-alpine-init \
-                   bash
+                   sh
 ```
 ### shell into a daemonized running container
 ```shell
@@ -70,7 +77,7 @@ sudo docker run -d \
                 --name init \
                 robwdux/docker-alpine-init \
                 ping 8.8.8.8 && \
-sudo docker exec -it init bash
+sudo docker exec -it init sh
 
 # in container
 bash-4.3# ps
