@@ -1,13 +1,18 @@
 #!/bin/sh
 set -o nounset -o errexit -o xtrace -o verbose
 
-CT_URL=https://releases.hashicorp.com/consul-template/${CONSUL_TEMPLATE_VERSION}
+local SVC=consul-template
+local URL=https://releases.hashicorp.com/consul-template/${CONSUL_TEMPLATE_VERSION}
+local CNF_DIR=/${SVC}
+local SRC_DIR=/usr/src/${SVC}
+local BIN_DIR=/usr/local/bin/
 
-mkdir -p /usr/src/consul-template/
+mkdir -p $SRC_DIR $CNF_DIR
+cd $SRC_DIR
 
-curl -fLO ${CT_URL}/consul-template_${CONSUL_TEMPLATE_VERSION}_linux_amd64.zip
-curl -fLO ${CT_URL}/consul-template_${CONSUL_TEMPLATE_VERSION}_SHA256SUMS.sig
-curl -fLO ${CT_URL}/consul-template_${CONSUL_TEMPLATE_VERSION}_SHA256SUMS
+curl -fLO ${URL}/consul-template_${CONSUL_TEMPLATE_VERSION}_linux_amd64.zip
+curl -fLO ${URL}/consul-template_${CONSUL_TEMPLATE_VERSION}_SHA256SUMS.sig
+curl -fLO ${URL}/consul-template_${CONSUL_TEMPLATE_VERSION}_SHA256SUMS
 
 # Verify binary
 # https://www.hashicorp.com/security.html
@@ -24,32 +29,40 @@ grep consul-template_${CONSUL_TEMPLATE_VERSION}_linux_amd64 SHA256SUMS \
     exit 1;
   }
 
-unzip consul-template_${CONSUL_TEMPLATE_VERSION}_linux_amd64.zip -d /consul-template/
+unzip consul-template_${CONSUL_TEMPLATE_VERSION}_linux_amd64.zip
 
-mkdir ${SVC_TDIR}/consul-template
-
-# create user and group(s) to drop/share privileges
-
-SGRP=consul-template
-addgroup -S $SGRP
-adduser -D -S -h ${CONSUL_TEMPLATE_DIR} -s /sbin/nologin -G $SGRP $SHGRP consul-template
-
-# setup / stage the service dir, symlink to enable
-
-cp ${SVC_TDIR}/run ${SVC_TDIR}/consul-template/run
-
-# drop privs, use shared group otherwise service group
-
-GRP=${SHGRP:-${SGRP}}
-setuidgid="s6-setuidgid $(id -u consul-template):$(id -g ${GRP})"
+chmod +x $SVC
+mv $SVC $BIN_DIR
 
 # create test template
 
-echo "{{ (env $CONSUL_TEMPLATE_VERSION) }}" >> /${CONSUL_TEMPLATE_DIR}/test.ctmpl
+echo "{{ (env $CONSUL_TEMPLATE_VERSION) }}" >> ${CNF_DIR}/test.ctmpl
+
+#
+# service setup
+#
+
+# create user and group(s) to drop/share privileges
+
+local SGRP=$SVC
+addgroup -S $SGRP
+adduser -D -S -h ${CNF_DIR} -s /sbin/nologin -G $SGRP $SHGRP $SVC
+
+# stage the service dir, symlink to enable
+
+mkdir ${SVC_TDIR}/${SVC}
+
+cp ${SVC_TDIR}/run ${SVC_TDIR}/${SVC}/run
+
+# drop privs, use shared group otherwise service group
+
+local GRP=${SHGRP:-${SGRP}}
+local setuidgid="s6-setuidgid $(id -u ${SVC}):$(id -g ${GRP})"
 
 # consul-template config options
 
-ctopt="-log-level \$CONSUL_TEMPLATE_LOG_LEVEL -consul \$CONSUL_AGENT"
+local ctopt="-log-level \$CONSUL_TEMPLATE_LOG_LEVEL -consul \$CONSUL_AGENT"
 
-echo "exec $setuidgid consul-template $ctopt -template $CONSUL_TEMPLATE" \
-  >> ${SVC_TDIR}/consul-template/run
+# Actual template interpolates at runtime
+echo "exec $setuidgid $SVC $ctopt -template \$CONSUL_TEMPLATE" \
+  >> ${SVC_TDIR}/${SVC}/run

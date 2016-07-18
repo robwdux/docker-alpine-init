@@ -1,15 +1,21 @@
 # docker-alpine-init
-See below for help with the s6 init system
 <!---
 [![](https://badge.imagelayers.io/robwdux/docker-alpine-init:latest.svg)](https://imagelayers.io/?images=robwdux/docker-alpine-init:latest 'Get your own badge on imagelayers.io')
 -->
 
-*Provides s6 init system via [s6-overlay](https://github.com/just-containers/s6-overlay) in addition to [robwdux/alpine-base](https://github.com/robwdux/docker-alpine-base)*
+_**Provides s6 init system via [s6-overlay](https://github.com/just-containers/s6-overlay) in addition to that provided by [robwdux/alpine-base](https://github.com/robwdux/docker-alpine-base)**_
 
-Addons available selectively during build.
+See [below](#working-with-s6-init-system) for help with the s6 init system
+
+Addons available selectively during build. Assisting applications include:
++ [telegraf](https://github.com/influxdata/telegraf/blob/master/README.md) for exporting metrics (e.g. read a stats endpoint and stream to [influxdb](https://github.com/influxdata/influxdb/blob/master/README.md) or another of the supported [outputs](https://github.com/influxdata/telegraf#supported-output-plugins))
 + [consul-template](https://github.com/hashicorp/consul-template/blob/master/README.md) for dynamic configuration (requires [consul](https://www.consul.io/intro/index.html))
 
 ## [Alpine Linux](http://alpinelinux.org/) base image plus s6 init system
+
+**Control the initialization, runtime and shutdown of containers through multi stage init.**
++ process supervision, especially for *assisting* processes
++ reap defunct *"zombie"* processes (specifically for applications that spawn additional processes), mitigating a full process table
 
 **3 Stage Init system**
 
@@ -22,8 +28,6 @@ Stage 2:
 
 Stage 3:
 + container shutdown - execute code prior to service(s) being stopped
-
-**Reaps defunct (zombie) processes, mitigating full process table**
 
 ### ...start your Dockerfile
 
