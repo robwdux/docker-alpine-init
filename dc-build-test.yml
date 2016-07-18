@@ -13,7 +13,7 @@ services:
     extends:
       file: docker-compose.yml
       service: init
-    image: registry:5000/jenkins/init:test
+    image: robwdux/init:test
     build:
       args:
         ADD_CONSUL_TEMPLATE: 'true'
