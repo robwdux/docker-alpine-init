@@ -14,7 +14,8 @@ ARG ADD_TELEGRAF=${ADD_TELEGRAF:-false}
 ARG TELEGRAF_VERSION=${TELEGRAF_VERSION:-0.13.1}
 
 ENV SVC_DIR=/etc/services.d \
-    SVC_TDIR=/etc/s6/svc-templates \
+    SVC_STG=/etc/services.d/available \
+    SVC_TDIR=/etc/services.d/templates \
     # do not reset container env \
     S6_KEEP_ENV=1 \
     # log to stdout and stderr for all services
@@ -46,7 +47,7 @@ RUN set -o nounset -o errexit -o xtrace -o verbose \
     && gpg --verify s6-overlay-amd64.tar.gz.sig s6-overlay-amd64.tar.gz \
     && tar -C / -zxf s6-overlay-amd64.tar.gz \
     # stage services, template scripts. symlink service to $SVC_DIR to enable
-    && mkdir -p $SVC_TDIR \
+    && mkdir -p $SVC_STG $SVC_TDIR \
     && { \
           echo "#!/bin/sh"; \
           echo "set -o nounset -o errexit -o xtrace -o verbose"; \
