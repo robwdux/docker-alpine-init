@@ -7,7 +7,7 @@ ENTRYPOINT ["/init"]
 WORKDIR /etc/services.d
 
 # --build-arg ADD_TELEGRAF=true
-ARG S6_VERSION=${S6_VERSION:-1.18.1.3}
+ARG S6_VERSION=${S6_VERSION:-1.18.1.5}
 ARG ADD_CONSUL_TEMPLATE=${ADD_CONSUL_TEMPLATE:-false}
 ARG CONSUL_TEMPLATE_VERSION=${CONSUL_TEMPLATE_VERSION:-0.15.0}
 ARG ADD_TELEGRAF=${ADD_TELEGRAF:-false}
@@ -43,7 +43,7 @@ RUN set -o nounset -o errexit -o xtrace -o verbose \
         https://github.com/just-containers/s6-overlay/releases/download/v${S6_VERSION}/s6-overlay-amd64.tar.gz \
     && curl -fLO \
         https://github.com/just-containers/s6-overlay/releases/download/v${S6_VERSION}/s6-overlay-amd64.tar.gz.sig \
-    && gpg --keyserver pgp.mit.edu --recv-key 0x337EE704693C17EF \
+    && curl https://keybase.io/justcontainers/key.asc | gpg --import \
     && gpg --verify s6-overlay-amd64.tar.gz.sig s6-overlay-amd64.tar.gz \
     && tar -C / -zxf s6-overlay-amd64.tar.gz \
     # stage services, template scripts. symlink service to $SVC_DIR to enable
