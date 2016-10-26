@@ -16,7 +16,7 @@ services:
         GIT_COMMIT_AUTHOR: ${GIT_COMMIT_AUTHOR}
         GIT_REPO_URL: ${GIT_REPO_URL}
     # tag to match source version of s6-overlay
-    image: robwdux/alpine-init:1.18.1.3
+    image: robwdux/alpine-init:1.18.1.5
     container_name: init
 #    environment:
 #      MY_VAR: value
