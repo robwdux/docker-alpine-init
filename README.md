@@ -1,7 +1,5 @@
 # docker-alpine-init
-<!---
-[![](https://badge.imagelayers.io/robwdux/docker-alpine-init:latest.svg)](https://imagelayers.io/?images=robwdux/docker-alpine-init:latest 'Get your own badge on imagelayers.io')
--->
+[![](https://images.microbadger.com/badges/image/robwdux/docker-alpine-init.svg)](https://microbadger.com/#/images/robwdux/docker-alpine-init "Get your own image badge on microbadger.com")
 
 _**Provides s6 init system via [s6-overlay](https://github.com/just-containers/s6-overlay) in addition to that provided by [robwdux/alpine-base](https://github.com/robwdux/docker-alpine-base)**_
 
